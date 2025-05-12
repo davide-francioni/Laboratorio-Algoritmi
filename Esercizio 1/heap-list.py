@@ -17,6 +17,12 @@ class PriorityQueueHeap:
         if max_node != index:
             self.max_heapify(max_node)
 
+    def increase_value(self, index, value):
+        if value < self.heap[index]:
+
+        self.heap[index] = value
+        self.max_heapify(index)
+
     def insert(self, value):
         self.heap[len(self.heap)-1]=value
         self.max_heapify(len(self.heap) - 1)
@@ -55,6 +61,7 @@ class PriorityQueueHeap:
         self.heap.pop(len(self.heap) - 1)
         self.max_heapify(self.heap[0])
         return max_node
+
     def extract_min(self):
         if not self.heap:
             return None
@@ -62,8 +69,9 @@ class PriorityQueueHeap:
         if len(self.heap) == 1:
             self.heap.pop()
             return min_node
-        # Sposta l'ultimo elemento in cima e rimuovi la radice
         min_ind=self.heap.find_min()
         min_node = self.heap[min_ind]
-        self.heap.pop(min_ind)
+        self.heap[min_ind]=self.heap[len(self.heap)-1]
+        self.heap.pop(len(self.heap) - 1)
+        self.max_heapify(min_ind)
         return min_node
