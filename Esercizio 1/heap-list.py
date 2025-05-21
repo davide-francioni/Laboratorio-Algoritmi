@@ -1,20 +1,31 @@
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
 class MaxHeap:
-    def __init__(self):
-        self.heap = []
+    def __init__(self, A):
+        self.heap = [len(A)]
+
+    def buid_max_heap(self):
+        for i in range(len(self.heap) - 1, -1, -1):
+            self.max_heapify(i)
+
 
     def is_empty(self):
         return len(self.heap) == 0
 
-    def max_heapify(self, index):
-        left = 2 * index + 1
-        right = 2 * index + 2
-        if left < len(self.heap) and self.heap[left] < self.heap[index]:
+    def max_heapify(self, i):
+        left = 2 * i + 1
+        right = 2 * i + 2
+        if left < len(self.heap) and self.heap[left] < self.heap[i]:
             max_node = left
         else:
-            max_node = index
-        if right < len(self.heap) and self.heap[right] < self.heap[index]:
+            max_node = i
+        if right < len(self.heap) and self.heap[right] < self.heap[i]:
             max_node=right
-        if max_node != index:
+        if max_node != i:
             self.max_heapify(max_node)
 
     def increase_value(self, index, value):
@@ -97,3 +108,4 @@ class MinHeap:
         self.heap.pop(len(self.heap) - 1)
         self.min_heapify(self.heap[0])
         return min_node
+
