@@ -1,15 +1,9 @@
-class Node:
-    def __init__(self, value):
-        self.value = value
-        self.left = None
-        self.right = None
-
 class MaxHeap:
-    def __init__(self, A):
-        self.heap = [len(A)]
+    def __init__(self):
+        self.heap= []
 
     def buid_max_heap(self):
-        for i in range(len(self.heap) - 1, -1, -1):
+        #for i in range(len(self.heap) - 1, -1, -1):
             self.max_heapify(i)
 
 
@@ -109,3 +103,6 @@ class MinHeap:
         self.min_heapify(self.heap[0])
         return min_node
 
+if __name__ == '__main__':
+    #genera un array casuale
+    arr = MaxHeap()
