@@ -1,11 +1,17 @@
 class MaxHeap:
-    def __init__(self):
-        self.heap= []
+    def __init__(self, A):
+        self.heap= [len(A)]
+        print(len(self.heap))
+        self.build_max_heap()
 
-    def buid_max_heap(self):
-        #for i in range(len(self.heap) - 1, -1, -1):
+    def build_max_heap(self):
+        #print(len(self.heap))
+        i = (len(self.heap)/2)+1
+        #print(i)
+        while i >= 0:
+            #print(self.heap[i])
             self.max_heapify(i)
-
+            i -= 1
 
     def is_empty(self):
         return len(self.heap) == 0
@@ -13,11 +19,11 @@ class MaxHeap:
     def max_heapify(self, i):
         left = 2 * i + 1
         right = 2 * i + 2
-        if left < len(self.heap) and self.heap[left] < self.heap[i]:
+        if left < len(self.heap) and self.heap[left] > self.heap[i]:
             max_node = left
         else:
             max_node = i
-        if right < len(self.heap) and self.heap[right] < self.heap[i]:
+        if right < len(self.heap) and self.heap[right] > self.heap[i]:
             max_node=right
         if max_node != i:
             self.max_heapify(max_node)
@@ -54,8 +60,15 @@ class MaxHeap:
         return max_node
 
 class MinHeap:
-    def __init__(self):
-        self.heap = []
+    def __init__(self, A):
+        self.heap = [len(A)]
+        self.build_max_heap()
+
+    def build_max_heap(self):
+        i = len(self.heap) // 2
+        while i > 0:
+            self.min_heapify(i)
+            i -= 1
 
     def is_empty(self):
         return len(self.heap) == 0
@@ -63,14 +76,14 @@ class MinHeap:
     def min_heapify(self, index):
         left = 2 * index + 1
         right = 2 * index + 2
-        if left < len(self.heap) and self.heap[left] > self.heap[index]:
-            max_node = left
+        if left < len(self.heap) and self.heap[left] < self.heap[index]:
+            min_node = left
         else:
-            max_node = index
-        if right < len(self.heap) and self.heap[right] > self.heap[index]:
-            max_node = right
-        if max_node != index:
-            self.min_heapify(max_node)
+            min_node = index
+        if right < len(self.heap) and self.heap[right] < self.heap[index]:
+            min_node = right
+        if min_node != index:
+            self.min_heapify(min_node)
 
     def decrease_value(self, index, value):
         if value > self.heap[index]:
@@ -105,4 +118,8 @@ class MinHeap:
 
 if __name__ == '__main__':
     #genera un array casuale
-    arr = MaxHeap()
+    b=[5,6,9,12,3]
+    arr = MaxHeap(b)
+    for i in range(len(b)):
+        x=arr.extract_max()
+        print(x)
