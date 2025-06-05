@@ -116,10 +116,61 @@ class MinHeap:
         self.min_heapify(self.heap[0])
         return min_node
 
+def max_heapify(arr, index):
+    if len(arr) == 1:
+        return
+    left = 2 * index+1
+    right = 2 * index+2
+    if left < len(arr) and arr[left] > arr[index]:
+        max_node = left
+    else:
+        max_node = index
+    if right < len(arr) and arr[right] > arr[index]:
+        max_node=right
+    if max_node != index:
+        app=arr[max_node]
+        arr[max_node]=arr[index]
+        arr[index]=app
+        max_heapify(arr, max_node)
+
+def build_max_heap(arr):
+    if len(arr) == 0:
+        return
+    index = len(arr)-1
+    while index >= (len(arr)/2)-1:
+        max_heapify(arr, index)
+        index -= 1
+
+def increase_value(arr, index, value):
+    if value < arr[index]:
+        raise ValueError(f"{value} is lower than {value}")
+    arr[index] = value
+    while index > 1 and arr[(index/2)-1] < arr[index]:
+        app=arr[(index/2)-1]
+        arr[(index/2)-1]=arr[index]
+        arr[index]=app
+        index=(index/2)-1
+
+def insert(arr, value):
+    arr[len(arr)]=-1000000
+    increase_value(arr, len(arr)-1, value)
+
+def heap_max(arr):
+    return arr[0]
+
+def extract_max(arr):
+    if len(arr) <1:
+        raise ValueError(f"Empty array")
+    max_node = arr[0]
+    arr[0] = arr[len(arr)-1]
+    arr.pop(len(arr) - 1)
+    max_heapify(arr, 0)
+    return max_node
+
 if __name__ == '__main__':
     #genera un array casuale
-    b=[5,6,9,12,3]
-    arr = MaxHeap(b)
-    for i in range(len(b)):
-        x=arr.extract_max()
+    arr=[5,6,9,12,3]
+    build_max_heap(arr)
+    for i in range(len(arr)):
+        x=extract_max(arr)
         print(x)
