@@ -19,19 +19,18 @@ class PriorityQueueLinkedHeap:
         if node.right is not None and node.right.value > max_node.value:
             max_node=node.right
         if max_node != node:
+            self.swap_node(max_node, node)
             self.max_heapify(max_node)
 
-    def insert1(self, value):
-        new_node = HeapNode(value)
-        i=self.size
-        self.size += 1
-        if self.root is None:
-            self.root = new_node
-            self.last_node = new_node
-            return
-        while i>1:
-
-        self.last_node = new_node
+    def find_path(self, i):
+        if i==1:
+            return self.root
+        else:
+            node = self.find_path(i//2)
+            if i%2==0:
+                return node.left
+            else:
+                return node.right
 
     def insert(self, value):
         new_node = HeapNode(value)
@@ -40,21 +39,27 @@ class PriorityQueueLinkedHeap:
             self.root = new_node
             self.last_node = new_node
             return
-        # Trova posizione dove inserire (BFS fino a size-th posizione)
-        path = bin(self.size)[3:]  # salta "0b1" per ignorare la root
-        current = self.root
-        for direction in path[:-1]:
-            if direction == '0':
-                current = current.left
-            else:
-                current = current.right
-        if path[-1] == '0':
-            current.left = new_node
+        parent=self.find_path(self.size)
+        if self.size % 2 == 0:
+            parent.left=new_node
         else:
-            current.right = new_node
-        new_node.parent = current
+            parent.right=new_node
         self.last_node = new_node
-        self._heapify_up(new_node)
+        new_node.parent = parent
+        self.max_heapify(new_node)
+
+    def increase_value(self, node, value):
+        if value < node.value:
+            raise ValueError(f"{value} is lower than {node.value}")
+        node.value = value
+        while node!=self.root and node.parent.value < node.value:
+            self.swap_node(node, node.parent)
+            node=node.parent
+
+    def heap_max(self):
+        if self.is_empty():
+            return None
+        return self.root.value
 
     def extract_min(self):
         if self.root is None:
@@ -76,7 +81,7 @@ class PriorityQueueLinkedHeap:
             else:
                 current = current.right
         # Sposta l'ultimo nodo alla radice
-        self._swap_node(self.root, current)
+        self.swap_node(self.root, current)
         # Rimuove l'ultimo nodo
         if path[-1] == '0':
             parent.left = None
@@ -88,17 +93,11 @@ class PriorityQueueLinkedHeap:
         self._heapify_down(self.root)
         return min_value
 
-    def _heapify_up(self, node):
-        while node.parent and node.priority < node.parent.priority:
-            self._swap_node(node, node.parent)
-            node = node.parent
-
-    def _swap_node(self, a, b):
-        a.value, b.value = b.value, a.value
-
     def is_empty(self):
         return self.size == 0
 
+    def swap_node(self, a, b):
+        a.value, b.value = b.value, a.value
 
 
 class MaxHeap:
