@@ -1,6 +1,109 @@
+class HeapNode:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+        self.parent = None
+
+class PriorityQueueLinkedHeap:
+    def __init__(self):
+        self.root = None
+        self.size = 0
+        self.last_node = None  # Per tenere traccia dell'ultimo nodo inserito
+
+    def max_heapify(self, node):
+        if node.left is not None and node.left.value > node.value:
+            max_node = node.left
+        else:
+            max_node = node
+        if node.right is not None and node.right.value > max_node.value:
+            max_node=node.right
+        if max_node != node:
+            self.max_heapify(max_node)
+
+    def insert1(self, value):
+        new_node = HeapNode(value)
+        i=self.size
+        self.size += 1
+        if self.root is None:
+            self.root = new_node
+            self.last_node = new_node
+            return
+        while i>1:
+
+        self.last_node = new_node
+
+    def insert(self, value):
+        new_node = HeapNode(value)
+        self.size += 1
+        if self.root is None:
+            self.root = new_node
+            self.last_node = new_node
+            return
+        # Trova posizione dove inserire (BFS fino a size-th posizione)
+        path = bin(self.size)[3:]  # salta "0b1" per ignorare la root
+        current = self.root
+        for direction in path[:-1]:
+            if direction == '0':
+                current = current.left
+            else:
+                current = current.right
+        if path[-1] == '0':
+            current.left = new_node
+        else:
+            current.right = new_node
+        new_node.parent = current
+        self.last_node = new_node
+        self._heapify_up(new_node)
+
+    def extract_min(self):
+        if self.root is None:
+            return None
+        min_value = (self.root.priority, self.root.value)
+        if self.size == 1:
+            self.root = None
+            self.last_node = None
+            self.size = 0
+            return min_value
+        # Trova ultimo nodo (BFS tramite path binario)
+        parent = None
+        path = bin(self.size)[3:]
+        current = self.root
+        for direction in path:
+            parent = current
+            if direction == '0':
+                current = current.left
+            else:
+                current = current.right
+        # Sposta l'ultimo nodo alla radice
+        self._swap_node(self.root, current)
+        # Rimuove l'ultimo nodo
+        if path[-1] == '0':
+            parent.left = None
+        else:
+            parent.right = None
+        self.size -= 1
+        self.last_node = self._find_last_node()
+        # Heapify down dalla radice
+        self._heapify_down(self.root)
+        return min_value
+
+    def _heapify_up(self, node):
+        while node.parent and node.priority < node.parent.priority:
+            self._swap_node(node, node.parent)
+            node = node.parent
+
+    def _swap_node(self, a, b):
+        a.value, b.value = b.value, a.value
+
+    def is_empty(self):
+        return self.size == 0
+
+
+
 class MaxHeap:
-    def __init__(self, A):
-        self.heap= [len(A)]
+    def __init__(self):
+        self.heap= []
         print(len(self.heap))
         self.build_max_heap()
 
@@ -125,7 +228,7 @@ def max_heapify(arr, index):
         max_node = left
     else:
         max_node = index
-    if right < len(arr) and arr[right] > arr[index]:
+    if right < len(arr) and arr[right] > arr[max_node]:
         max_node=right
     if max_node != index:
         app=arr[max_node]
@@ -136,23 +239,23 @@ def max_heapify(arr, index):
 def build_max_heap(arr):
     if len(arr) == 0:
         return
-    index = len(arr)-1
-    while index >= (len(arr)/2)-1:
+    index = (len(arr)//2)-1
+    while index >= 0:
         max_heapify(arr, index)
         index -= 1
 
 def increase_value(arr, index, value):
     if value < arr[index]:
-        raise ValueError(f"{value} is lower than {value}")
+        raise ValueError(f"{value} is lower than {arr[index]}")
     arr[index] = value
-    while index > 1 and arr[(index/2)-1] < arr[index]:
-        app=arr[(index/2)-1]
-        arr[(index/2)-1]=arr[index]
+    while index > 1 and arr[(index//2)-1] < arr[index]:
+        app=arr[(index//2)-1]
+        arr[(index//2)-1]=arr[index]
         arr[index]=app
-        index=(index/2)-1
+        index=(index//2)-1
 
 def insert(arr, value):
-    arr[len(arr)]=-1000000
+    arr.append(-1000000)
     increase_value(arr, len(arr)-1, value)
 
 def heap_max(arr):
@@ -171,6 +274,8 @@ if __name__ == '__main__':
     #genera un array casuale
     arr=[5,6,9,12,3]
     build_max_heap(arr)
+    insert(arr, 8)
     for i in range(len(arr)):
+        heap_max(arr)
         x=extract_max(arr)
         print(x)
