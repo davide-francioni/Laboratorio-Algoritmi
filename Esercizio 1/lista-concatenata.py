@@ -56,7 +56,6 @@ class Lista_Concatenata:
                 max_prev = prev
             prev = current
             current = current.next
-        # Rimuovi il nodo minimo dalla lista
         if max_prev is None:
             self.head = self.head.next
             self.head.prev = None

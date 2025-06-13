@@ -8,14 +8,13 @@ class Node:
         self.next = None
         self.prev = None
 
-class Lista_Concatenata:
+class Lista_Concatenata_Ordinata:
     def __init__(self):
         self.head = None
         self.tail = None
 
     def sort(self, node):
         if self.head.priority < node.priority:
-            print("Scambio in testa:", node.value, self.head.value)
             self.head.prev = node
             node.next = self.head
             self.head = node
@@ -23,9 +22,6 @@ class Lista_Concatenata:
         current = self.head
         while current.next and current.next.priority > node.priority:
             current = current.next
-
-        if current.next:
-            print("Scambio:", node.value, current.next.value)
 
         node.next = current.next
         node.prev = current
@@ -114,7 +110,7 @@ if __name__ == '__main__':
     print(arr)
     print(pri)
 
-    lista=Lista_Concatenata()
+    lista=Lista_Concatenata_Ordinata()
     i=0
     while i<len(arr):
         lista.insert(pri[i], arr[i])
