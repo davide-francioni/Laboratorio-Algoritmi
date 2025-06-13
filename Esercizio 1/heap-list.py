@@ -59,6 +59,12 @@ class MaxHeap:
         print("Padre:", new_node.parent.value)
         self.increase_value(new_node, value)
         print("Inserimento:",new_node.value)
+        i=1
+        print("Lista completa:")
+        while i<=self.size:
+            x = self.find_path(i)
+            print(x.value)
+            i+=1
 
     def increase_value(self, node, value):
         if value < node.value:
