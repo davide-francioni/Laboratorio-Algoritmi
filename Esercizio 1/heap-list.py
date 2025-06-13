@@ -1,3 +1,5 @@
+import random
+
 class HeapNode:
     def __init__(self, value):
         self.value = value
@@ -5,17 +7,17 @@ class HeapNode:
         self.right = None
         self.parent = None
 
-class PriorityQueueLinkedHeap:
+class MaxHeap:
     def __init__(self):
         self.root = None
         self.size = 0
-        self.last_node = None  # Per tenere traccia dell'ultimo nodo inserito
 
     def max_heapify(self, node):
         if node.left is not None and node.left.value > node.value:
             max_node = node.left
         else:
             max_node = node
+
         if node.right is not None and node.right.value > max_node.value:
             max_node=node.right
         if max_node != node:
@@ -33,19 +35,19 @@ class PriorityQueueLinkedHeap:
                 return node.right
 
     def insert(self, value):
-        new_node = HeapNode(value)
+        new_node = HeapNode(value-1)
         self.size += 1
         if self.root is None:
             self.root = new_node
-            self.last_node = new_node
+            self.increase_value(self.root, value)
             return
-        parent=self.find_path(self.size)
+        parent = self.find_path(self.size//2)
         if self.size % 2 == 0:
             parent.left=new_node
         else:
             parent.right=new_node
-        self.last_node = new_node
         new_node.parent = parent
+        self.increase_value(new_node, value)
         self.max_heapify(new_node)
 
     def increase_value(self, node, value):
@@ -61,37 +63,27 @@ class PriorityQueueLinkedHeap:
             return None
         return self.root.value
 
-    def extract_min(self):
+    def extract_max(self):
         if self.root is None:
             return None
-        min_value = (self.root.priority, self.root.value)
+        max_value = self.root.value
         if self.size == 1:
             self.root = None
-            self.last_node = None
             self.size = 0
-            return min_value
+            return max_value
         # Trova ultimo nodo (BFS tramite path binario)
-        parent = None
-        path = bin(self.size)[3:]
-        current = self.root
-        for direction in path:
-            parent = current
-            if direction == '0':
-                current = current.left
-            else:
-                current = current.right
+        current = self.find_path(self.size)
+        parent = current.parent
         # Sposta l'ultimo nodo alla radice
         self.swap_node(self.root, current)
         # Rimuove l'ultimo nodo
-        if path[-1] == '0':
+        if self.size % 2 == 0:
             parent.left = None
         else:
             parent.right = None
         self.size -= 1
-        self.last_node = self._find_last_node()
-        # Heapify down dalla radice
-        self._heapify_down(self.root)
-        return min_value
+        self.max_heapify(self.root)
+        return max_value
 
     def is_empty(self):
         return self.size == 0
@@ -99,182 +91,32 @@ class PriorityQueueLinkedHeap:
     def swap_node(self, a, b):
         a.value, b.value = b.value, a.value
 
-
-class MaxHeap:
-    def __init__(self):
-        self.heap= []
-        print(len(self.heap))
-        self.build_max_heap()
-
-    def build_max_heap(self):
-        #print(len(self.heap))
-        i = (len(self.heap)/2)+1
-        #print(i)
-        while i >= 0:
-            #print(self.heap[i])
-            self.max_heapify(i)
-            i -= 1
-
-    def is_empty(self):
-        return len(self.heap) == 0
-
-    def max_heapify(self, i):
-        left = 2 * i + 1
-        right = 2 * i + 2
-        if left < len(self.heap) and self.heap[left] > self.heap[i]:
-            max_node = left
-        else:
-            max_node = i
-        if right < len(self.heap) and self.heap[right] > self.heap[i]:
-            max_node=right
-        if max_node != i:
-            self.max_heapify(max_node)
-
-    def increase_value(self, index, value):
-        if value < self.heap[index]:
-            raise ValueError(f"{value} is lower than {value}")
-        self.heap[index] = value
-        while index > 0 and self.heap[(index//2)-1] < self.heap[index]:
-            app=self.heap[(index//2)-1]
-            self.heap[index//2-1]=self.heap[index]
-            self.heap[index]=app
-            index=index//2-1
-
-    def insert(self, value):
-        self.heap.append(value-1)
-        self.increase_value(len(self.heap) - 1, value)
-
-    def heap_max(self):
-        if not self.heap:
+    def get_random_node(self):
+        if self.size == 0:
             return None
-        return self.heap[0]
+        i = random.randint(1, self.size)
+        return self.find_path(i)
 
-    def extract_max(self):
-        if not self.heap:
-            return None
-        max_node = self.heap[0]
-        if len(self.heap) == 1:
-            self.heap.pop()
-            return max_node
-        self.heap[0] = self.heap[len(self.heap)-1]
-        self.heap.pop(len(self.heap) - 1)
-        self.max_heapify(self.heap[0])
-        return max_node
+def genera_array_casuale(dimensione, minimo=0, massimo=100):
+    return [random.randint(minimo, massimo) for _ in range(dimensione)]
 
-class MinHeap:
-    def __init__(self, A):
-        self.heap = [len(A)]
-        self.build_max_heap()
-
-    def build_max_heap(self):
-        i = len(self.heap) // 2
-        while i > 0:
-            self.min_heapify(i)
-            i -= 1
-
-    def is_empty(self):
-        return len(self.heap) == 0
-
-    def min_heapify(self, index):
-        left = 2 * index + 1
-        right = 2 * index + 2
-        if left < len(self.heap) and self.heap[left] < self.heap[index]:
-            min_node = left
-        else:
-            min_node = index
-        if right < len(self.heap) and self.heap[right] < self.heap[index]:
-            min_node = right
-        if min_node != index:
-            self.min_heapify(min_node)
-
-    def decrease_value(self, index, value):
-        if value > self.heap[index]:
-            raise ValueError(f"{value} is greater than {value}")
-        self.heap[index] = value
-        while index > 0 and self.heap[(index // 2) - 1] > self.heap[index]:
-            app = self.heap[(index // 2) - 1]
-            self.heap[index // 2 - 1] = self.heap[index]
-            self.heap[index] = app
-            index = index // 2 - 1
-
-    def insert(self, value):
-        self.heap.append(value +1)
-        self.decrease_value(len(self.heap) - 1, value)
-
-    def heap_min(self):
-        if not self.heap:
-            return None
-        return self.heap[0]
-
-    def extract_min(self):
-        if not self.heap:
-            return None
-        min_node = self.heap[0]
-        if len(self.heap) == 1:
-            self.heap.pop()
-            return min_node
-        self.heap[0] = self.heap[len(self.heap) - 1]
-        self.heap.pop(len(self.heap) - 1)
-        self.min_heapify(self.heap[0])
-        return min_node
-
-def max_heapify(arr, index):
-    if len(arr) == 1:
-        return
-    left = 2 * index+1
-    right = 2 * index+2
-    if left < len(arr) and arr[left] > arr[index]:
-        max_node = left
-    else:
-        max_node = index
-    if right < len(arr) and arr[right] > arr[max_node]:
-        max_node=right
-    if max_node != index:
-        app=arr[max_node]
-        arr[max_node]=arr[index]
-        arr[index]=app
-        max_heapify(arr, max_node)
-
-def build_max_heap(arr):
-    if len(arr) == 0:
-        return
-    index = (len(arr)//2)-1
-    while index >= 0:
-        max_heapify(arr, index)
-        index -= 1
-
-def increase_value(arr, index, value):
-    if value < arr[index]:
-        raise ValueError(f"{value} is lower than {arr[index]}")
-    arr[index] = value
-    while index > 1 and arr[(index//2)-1] < arr[index]:
-        app=arr[(index//2)-1]
-        arr[(index//2)-1]=arr[index]
-        arr[index]=app
-        index=(index//2)-1
-
-def insert(arr, value):
-    arr.append(-1000000)
-    increase_value(arr, len(arr)-1, value)
-
-def heap_max(arr):
-    return arr[0]
-
-def extract_max(arr):
-    if len(arr) <1:
-        raise ValueError(f"Empty array")
-    max_node = arr[0]
-    arr[0] = arr[len(arr)-1]
-    arr.pop(len(arr) - 1)
-    max_heapify(arr, 0)
-    return max_node
 
 if __name__ == '__main__':
     #genera un array casuale
-    arr=[5,6,9,12,3]
-    build_max_heap(arr)
-    insert(arr, 8)
-    for i in range(len(arr)):
-        heap_max(arr)
-        x=extract_max(arr)
-        print(x)
+    arr = genera_array_casuale(10)
+    print(arr)
+
+    heap=MaxHeap()
+    i=0
+    while i<len(arr):
+        heap.insert(arr[i])
+        i += 1
+    i=0
+
+    #heap.increase_value(heap.get_random_node(), 17)
+
+    while i<len(arr):
+        x=heap.heap_max()
+        y=heap.extract_max()
+        print(x,y)
+        i += 1
