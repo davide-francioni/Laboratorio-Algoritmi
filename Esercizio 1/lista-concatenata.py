@@ -14,6 +14,7 @@ class Lista_Concatenata:
 
     def insert(self, priority, value):
         new_node = Node(priority, value)
+        print("Inserisco:", new_node.value)
         if self.head is None:
             self.head = new_node
             self.tail = new_node
@@ -26,7 +27,7 @@ class Lista_Concatenata:
         max_node = self.head
         current = self.head
 
-        while current is not None:
+        while current:
             if current.priority > max_node.priority:
                 max_node = current
             current = current.next
@@ -36,8 +37,8 @@ class Lista_Concatenata:
         if self.head is None:
             return None
         if self.head == self.tail:
-            x=self.head.value
-            y=self.head.priority
+            x=self.head.priority
+            y=self.head.value
             self.head = None
             self.tail = None
             return x, y
@@ -54,16 +55,25 @@ class Lista_Concatenata:
                 max_prev = prev
             prev = current
             current = current.next
-
         # Rimuovi il nodo minimo dalla lista
         if max_prev is None:
             self.head = self.head.next
             self.head.prev = None
         else:
             max_prev.next = max_node.next
-            max_prev.next.prev = max_prev
+            if max_prev.next is None:
+                self.tail = max_prev
+            else:
+                max_prev.next.prev = max_prev
 
         return max_node.priority, max_node.value
+
+    def increase_priority(self, node, priority):
+        if priority < node.priority:
+            raise ValueError(f"{priority} is lower than {node.priority}")
+        node.priority = priority
+        return node.priority
+
 
     def get_random_node(self):
         i = random.randint(1, 10)
@@ -81,22 +91,30 @@ class Lista_Concatenata:
 def genera_array_casuale(dimensione, minimo=0, massimo=100):
     return [random.randint(minimo, massimo) for _ in range(dimensione)]
 
+def genera_priorita_casuale(dimensione, minimo=0, massimo=10):
+    return [random.randint(minimo, massimo) for _ in range(dimensione)]
+
 if __name__ == '__main__':
     #genera un array casuale
     arr = genera_array_casuale(10)
+    pri = genera_priorita_casuale(10)
     print(arr)
+    print(pri)
 
-    list=Lista_Concatenata()
+    lista=Lista_Concatenata()
     i=0
     while i<len(arr):
-        list.insert(arr[i])
+        lista.insert(pri[i], arr[i])
         i += 1
     i=0
 
-    #heap.increase_value(heap.get_random_node(), 17)
+    x=lista.get_random_node()
+    y=x.priority
+    inc=lista.increase_priority(x, 11)
+    print("Aumento la priorità di:",x.value, "da", y, "a", inc)
 
     while i<len(arr):
-        x=list.list_max()
-        y=list.extract_max()
+        x=lista.list_max()
+        y=lista.extract_max()
         print(x,y)
         i += 1

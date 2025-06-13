@@ -13,15 +13,23 @@ class MaxHeap:
         self.size = 0
 
     def max_heapify(self, node):
+        if node.parent is None:
+            self.root = node
+            return
+        left = False
         if node.left is not None and node.left.value > node.value:
             max_node = node.left
+            left = True
         else:
             max_node = node
 
         if node.right is not None and node.right.value > max_node.value:
             max_node=node.right
         if max_node != node:
-            self.swap_node(max_node, node)
+            if left:
+                self.left_swap_node(max_node, node)
+            else:
+                self.right_swap_node(max_node, node)
             self.max_heapify(max_node)
 
     def find_path(self, i):
@@ -40,6 +48,7 @@ class MaxHeap:
         if self.root is None:
             self.root = new_node
             self.increase_value(self.root, value)
+            print("Inserimento:", new_node.value)
             return
         parent = self.find_path(self.size//2)
         if self.size % 2 == 0:
@@ -47,16 +56,19 @@ class MaxHeap:
         else:
             parent.right=new_node
         new_node.parent = parent
+        print("Padre:", new_node.parent.value)
         self.increase_value(new_node, value)
-        self.max_heapify(new_node)
+        print("Inserimento:",new_node.value)
 
     def increase_value(self, node, value):
         if value < node.value:
             raise ValueError(f"{value} is lower than {node.value}")
         node.value = value
-        while node!=self.root and node.parent.value < node.value:
-            self.swap_node(node, node.parent)
-            node=node.parent
+        while node.parent and node.parent.value < node.value:
+            if node.parent.left==node:
+                self.left_swap_node(node, node.parent)
+            else:
+                self.right_swap_node(node, node.parent)
 
     def heap_max(self):
         if self.is_empty():
@@ -71,7 +83,6 @@ class MaxHeap:
             self.root = None
             self.size = 0
             return max_value
-        # Trova ultimo nodo (BFS tramite path binario)
         current = self.find_path(self.size)
         parent = current.parent
         # Sposta l'ultimo nodo alla radice
@@ -88,8 +99,17 @@ class MaxHeap:
     def is_empty(self):
         return self.size == 0
 
-    def swap_node(self, a, b):
-        a.value, b.value = b.value, a.value
+    def left_swap_node(self, a, b):
+        a.parent, b.parent = b.parent, a
+        a.left, b.left = b, a.left
+        a.right, b.right = b.right, a.right
+        print("Scambio sinistro:",a.value, b.value)
+
+    def right_swap_node(self, a, b):
+        a.parent, b.parent = b.parent, a
+        a.left, b.left = b.left, a.left
+        a.right, b.right = b, a.right
+        print("Scambio destro:", a.value, b.value)
 
     def get_random_node(self):
         if self.size == 0:
@@ -113,7 +133,10 @@ if __name__ == '__main__':
         i += 1
     i=0
 
-    #heap.increase_value(heap.get_random_node(), 17)
+    x = heap.get_random_node()
+    y = x.value
+    heap.increase_value(x, 101)
+    print("Aumento:", y, "a", 101)
 
     while i<len(arr):
         x=heap.heap_max()
