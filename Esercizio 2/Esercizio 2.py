@@ -30,7 +30,6 @@ def genera_array_casuale(dimensione, minimo=0, massimo=100):
     return [random.randint(minimo, massimo) for _ in range(dimensione)]
 
 def funzione_da_misurare():
-    # Simuliamo un lavoro "pesante"
     total = 0
     for i in range(1000000):
         total += i
@@ -96,4 +95,3 @@ if __name__ == '__main__':
     print(" ")
     confrontig(100)
     print(" ")
-

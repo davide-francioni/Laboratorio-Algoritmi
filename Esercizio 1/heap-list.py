@@ -1,4 +1,5 @@
 import random
+import time
 
 class HeapNode:
     def __init__(self, value):
@@ -128,24 +129,69 @@ def genera_array_casuale(dimensione, minimo=0, massimo=100):
 
 
 if __name__ == '__main__':
-    #genera un array casuale
     arr = genera_array_casuale(10)
-    print(arr)
+    print("Elementi da inserire nell'heap", arr)
 
-    heap=MaxHeap()
-    i=0
-    while i<len(arr):
+    print("Creazione Coda di priorità con Heap...")
+    start_time = time.time()
+
+    heap = MaxHeap()
+    i = 0
+    while i < len(arr):
         heap.insert(arr[i])
         i += 1
-    i=0
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Coda di priorità creata")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    print("Inserimento dell'elemento 51 nel Heap...")
+    start_time = time.time()
+
+    heap.insert(51)
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Elemento Inserito")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
 
     x = heap.get_random_node()
     y = x.value
-    heap.increase_value(x, 101)
-    print("Aumento:", y, "a", 101)
+    print("Incremento:", y, "a", 101, "...")
+    start_time = time.time()
 
-    while i<len(arr):
-        x=heap.heap_max()
-        y=heap.extract_max()
-        print(x,y)
-        i += 1
+    heap.increase_value(x, 101)
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Incremento dell'elemento completato")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    print("Estrazione dell'elemento massimo...")
+    start_time = time.time()
+
+    x = heap.extract_max()
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Estrazione di", x, "completata")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    print("Stampa dell'elemento massimo...")
+    start_time = time.time()
+
+    x = heap.heap_max()
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Stampa di", x, "completata")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
