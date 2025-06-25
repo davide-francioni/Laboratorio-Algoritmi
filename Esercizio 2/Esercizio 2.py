@@ -35,7 +35,7 @@ def funzione_da_misurare():
         total += i
     return total
 
-def confrontig(n):
+def compare(n):
     A = genera_array_casuale(n)
     B = [0] * n
     for i in range(0, n):
@@ -73,25 +73,25 @@ def confrontig(n):
 if __name__ == '__main__':
     print("Confrontiamo per 3 elementi:")
     print(" ")
-    confrontig(3)
+    compare(3)
     print(" ")
     print("Confrontiamo per 5 elementi:")
     print(" ")
-    confrontig(5)
+    compare(5)
     print(" ")
     print("Confrontiamo per 10 elementi:")
     print(" ")
-    confrontig(10)
-    print(" ")
-    print("Confrontiamo per 20 elementi:")
-    print(" ")
-    confrontig(20)
+    compare(10)
     print(" ")
     print("Confrontiamo per 30 elementi:")
     print(" ")
-    confrontig(30)
+    compare(30)
+    print(" ")
+    print("Confrontiamo per 50 elementi:")
+    print(" ")
+    compare(50)
     print(" ")
     print("Confrontiamo per 100 elementi:")
     print(" ")
-    confrontig(100)
+    compare(100)
     print(" ")

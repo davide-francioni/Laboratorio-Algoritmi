@@ -96,9 +96,8 @@ class MaxHeap:
 def genera_array_casuale(dimensione, minimo=0, massimo=100):
     return [random.randint(minimo, massimo) for _ in range(dimensione)]
 
-
-if __name__ == '__main__':
-    arr = genera_array_casuale(10)
+def operations_times(n):
+    arr = genera_array_casuale(n)
     print("Elementi da inserire nell'heap", arr)
 
     print("Creazione Coda di priorità con Heap...")
@@ -128,13 +127,6 @@ if __name__ == '__main__':
     print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
 
     print(" ")
-
-    j=1
-    print("Lista completa")
-    while j<len(arr):
-        x= heap.find_path(j)
-        print(x.value)
-        j+=1
 
     x = heap.get_random_node()
     y = x.value
@@ -171,3 +163,175 @@ if __name__ == '__main__':
     tempo_impiegato = end_time - start_time
     print("Stampa di", x, "completata")
     print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+def operation_best_list(A):
+    print("Elementi da inserire nell'heap", A)
+
+    print("Creazione Coda di priorità con Heap...")
+    start_time = time.time()
+
+    heap = MaxHeap()
+    i = 0
+    while i < len(A):
+        heap.insert(A[i])
+        i += 1
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Coda di priorità creata")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    print("Inserimento dell'elemento 0 nel Heap...")
+    start_time = time.time()
+
+    heap.insert(0)
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Elemento Inserito")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    x = heap.get_random_node()
+    y = x.value
+    print("Incremento:", y, "a", y+1, "...")
+    start_time = time.time()
+
+    heap.increase_value(x, y+1)
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Incremento dell'elemento completato")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    print("Estrazione dell'elemento massimo...")
+    start_time = time.time()
+
+    x = heap.extract_max()
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Estrazione di", x, "completata")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    print("Stampa dell'elemento massimo...")
+    start_time = time.time()
+
+    x = heap.heap_max()
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Stampa di", x, "completata")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+def operation_worst_list(A):
+    print("Elementi da inserire nell'heap", A)
+
+    print("Creazione Coda di priorità con Heap...")
+    start_time = time.time()
+
+    heap = MaxHeap()
+    i = 0
+    while i < len(A):
+        heap.insert(A[i])
+        i += 1
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Coda di priorità creata")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    print("Inserimento dell'elemento 101 nel Heap...")
+    start_time = time.time()
+
+    heap.insert(101)
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Elemento Inserito")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    x = heap.find_path(heap.size)
+    y = x.value
+    print("Incremento:", y, "a", 102, "...")
+    start_time = time.time()
+
+    heap.increase_value(x, 102)
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Incremento dell'elemento completato")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    print("Estrazione dell'elemento massimo...")
+    start_time = time.time()
+
+    x = heap.extract_max()
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Estrazione di", x, "completata")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+    print("Stampa dell'elemento massimo...")
+    start_time = time.time()
+
+    x = heap.heap_max()
+
+    end_time = time.time()
+    tempo_impiegato = end_time - start_time
+    print("Stampa di", x, "completata")
+    print(f"Tempo impiegato: {tempo_impiegato:.6f} secondi")
+
+    print(" ")
+
+
+
+if __name__ == '__main__':
+    for i in range(1, 4):
+        print("Test", i, "con 10 elementi:")
+        print(" ")
+        operations_times(10)
+    for i in range(1, 4):
+        print("Test", i, "con 100 elementi:")
+        print(" ")
+        operations_times(100)
+    for i in range(1, 4):
+        print("Test", i, "con 1000 elementi:")
+        print(" ")
+        operations_times(1000)
+
+    A = [0] * 100
+    for i in range(0, 100):
+        A[i] = 100 - i
+
+    print("Test con lista ideale con 100 elementi:")
+    print(" ")
+    operation_best_list(A)
+
+    A= [0] * 100
+    for i in range(0, 100):
+        A[i] = i + 1
+
+    print("Test con lista peggiore con 100 elementi:")
+    print(" ")
+    operation_best_list(A)
