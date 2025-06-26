@@ -2,7 +2,7 @@ import time
 import random
 from heap import MaxHeap
 from lista_concatenata import Lista_Concatenata as ListaNonOrdinata
-from lista_concatenata_ordinata import Lista_Concatenata as ListaOrdinata
+from lista_concatenata_ordinata import Lista_Concatenata_Ordinata as ListaOrdinata
 import csv
 
 def genera_array_casuale(dimensione, minimo=0, massimo=100):
