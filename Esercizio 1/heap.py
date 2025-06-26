@@ -2,7 +2,8 @@ import random
 import time
 
 class HeapNode:
-    def __init__(self, value):
+    def __init__(self, priority, value):
+        self.priority = priority
         self.value = value
         self.left = None
         self.right = None
@@ -16,6 +17,7 @@ class MaxHeap:
     def max_heapify(self, node):
         if node.left is not None and node.left.value > node.value:
             max_node = node.left
+            left = True
         else:
             max_node = node
         if node.right is not None and node.right.value > max_node.value:
@@ -34,12 +36,12 @@ class MaxHeap:
             else:
                 return node.right
 
-    def insert(self, value):
-        new_node = HeapNode(value-1)
+    def insert(self, priority, value):
+        new_node = HeapNode(priority-1, value)
         self.size += 1
         if self.size == 1:
             self.root = new_node
-            self.increase_value(self.root, value)
+            self.increase_priority(self.root, priority)
             return
         parent = self.find_path(self.size//2)
         if self.size % 2 == 0:
@@ -47,29 +49,29 @@ class MaxHeap:
         else:
             parent.right=new_node
         new_node.parent = parent
-        self.increase_value(new_node, value)
+        self.increase_priority(new_node, priority)
 
-    def increase_value(self, node, value):
-        if value < node.value:
-            raise ValueError(f"{value} is lower than {node.value}")
-        node.value = value
-        while node.parent and node.parent.value < node.value:
+    def increase_priority(self, node, priority):
+        if priority < node.priority:
+            raise ValueError(f"{priority} is lower than {node.priority}")
+        node.priority = priority
+        while node.parent and node.parent.priority < node.priority:
             self.swap_node(node, node.parent)
             node = node.parent
 
     def heap_max(self):
         if self.is_empty():
             return None
-        return self.root.value
+        return self.root.priority
 
     def extract_max(self):
         if self.root is None:
             return None
-        max_value = self.root.value
+        max_priority = self.root.priority
         if self.size == 1:
             self.root = None
             self.size = 0
-            return max_value
+            return max_priority
         current = self.find_path(self.size)
         parent = current.parent
         self.swap_node(self.root, current)
@@ -79,13 +81,13 @@ class MaxHeap:
             parent.right = None
         self.size -= 1
         self.max_heapify(self.root)
-        return max_value
+        return max_priority
 
     def is_empty(self):
         return self.size == 0
 
     def swap_node(self, a, b):
-        a.value, b.value = b.value, a.value
+        a.priority, b.priority = b.priority, a.priority
 
     def get_random_node(self):
         if self.size == 0:
@@ -98,6 +100,7 @@ def genera_array_casuale(dimensione, minimo=0, massimo=100):
 
 def operations_times(n):
     arr = genera_array_casuale(n)
+    pri = genera_array_casuale(n)
     print("Elementi da inserire nell'heap", arr)
 
     print("Creazione Coda di priorità con Heap...")
@@ -106,7 +109,7 @@ def operations_times(n):
     heap = MaxHeap()
     i = 0
     while i < len(arr):
-        heap.insert(arr[i])
+        heap.insert(pri[i], arr[i])
         i += 1
 
     end_time = time.time()
@@ -119,7 +122,7 @@ def operations_times(n):
     print("Inserimento dell'elemento 51 nel Heap...")
     start_time = time.time()
 
-    heap.insert(51)
+    heap.insert(51, 0)
 
     end_time = time.time()
     tempo_impiegato = end_time - start_time
@@ -129,11 +132,11 @@ def operations_times(n):
     print(" ")
 
     x = heap.get_random_node()
-    y = x.value
+    y = x.priority
     print("Incremento:", y, "a", 101, "...")
     start_time = time.time()
 
-    heap.increase_value(x, 101)
+    heap.increase_priority(x, 101)
 
     end_time = time.time()
     tempo_impiegato = end_time - start_time
@@ -175,7 +178,7 @@ def operation_best_list(A):
     heap = MaxHeap()
     i = 0
     while i < len(A):
-        heap.insert(A[i])
+        heap.insert(A[i], 0)
         i += 1
 
     end_time = time.time()
@@ -188,7 +191,7 @@ def operation_best_list(A):
     print("Inserimento dell'elemento 0 nel Heap...")
     start_time = time.time()
 
-    heap.insert(0)
+    heap.insert(0, 0)
 
     end_time = time.time()
     tempo_impiegato = end_time - start_time
@@ -202,7 +205,7 @@ def operation_best_list(A):
     print("Incremento:", y, "a", y+1, "...")
     start_time = time.time()
 
-    heap.increase_value(x, y+1)
+    heap.increase_priority(x, y+1)
 
     end_time = time.time()
     tempo_impiegato = end_time - start_time
@@ -244,7 +247,7 @@ def operation_worst_list(A):
     heap = MaxHeap()
     i = 0
     while i < len(A):
-        heap.insert(A[i])
+        heap.insert(A[i], 0)
         i += 1
 
     end_time = time.time()
@@ -257,7 +260,7 @@ def operation_worst_list(A):
     print("Inserimento dell'elemento 101 nel Heap...")
     start_time = time.time()
 
-    heap.insert(101)
+    heap.insert(101, 0)
 
     end_time = time.time()
     tempo_impiegato = end_time - start_time
@@ -271,7 +274,7 @@ def operation_worst_list(A):
     print("Incremento:", y, "a", 102, "...")
     start_time = time.time()
 
-    heap.increase_value(x, 102)
+    heap.increase_priority(x, 102)
 
     end_time = time.time()
     tempo_impiegato = end_time - start_time
