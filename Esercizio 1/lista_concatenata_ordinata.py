@@ -33,7 +33,7 @@ class Lista_Concatenata_Ordinata:
 
     def insert(self, priority, value):
         new_node = Node(priority, value)
-        print("Inserisco:", new_node.value)
+        #print("Inserisco:", new_node.value)
         if self.head is None:
             self.head = new_node
             self.tail = new_node

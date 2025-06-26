@@ -15,12 +15,11 @@ class MaxHeap:
         self.size = 0
 
     def max_heapify(self, node):
-        if node.left is not None and node.left.value > node.value:
+        if node.left is not None and node.left.priority > node.priority:
             max_node = node.left
-            left = True
         else:
             max_node = node
-        if node.right is not None and node.right.value > max_node.value:
+        if node.right is not None and node.right.priority > max_node.priority:
             max_node=node.right
         if max_node != node:
             self.swap_node(max_node, node)
@@ -59,7 +58,7 @@ class MaxHeap:
             self.swap_node(node, node.parent)
             node = node.parent
 
-    def heap_max(self):
+    def list_max(self):
         if self.is_empty():
             return None
         return self.root.priority
@@ -170,7 +169,8 @@ def operations_times(n):
     print(" ")
 
 def operation_best_list(A):
-    print("Elementi da inserire nell'heap", A)
+    arr = genera_array_casuale(100)
+    print("Elementi da inserire nell'heap", arr)
 
     print("Creazione Coda di priorità con Heap...")
     start_time = time.time()
@@ -178,7 +178,7 @@ def operation_best_list(A):
     heap = MaxHeap()
     i = 0
     while i < len(A):
-        heap.insert(A[i], 0)
+        heap.insert(A[i], arr[i])
         i += 1
 
     end_time = time.time()
@@ -201,7 +201,7 @@ def operation_best_list(A):
     print(" ")
 
     x = heap.get_random_node()
-    y = x.value
+    y = x.priority
     print("Incremento:", y, "a", y+1, "...")
     start_time = time.time()
 
@@ -239,7 +239,8 @@ def operation_best_list(A):
     print(" ")
 
 def operation_worst_list(A):
-    print("Elementi da inserire nell'heap", A)
+    arr = genera_array_casuale(100)
+    print("Elementi da inserire nell'heap", arr)
 
     print("Creazione Coda di priorità con Heap...")
     start_time = time.time()
@@ -247,7 +248,7 @@ def operation_worst_list(A):
     heap = MaxHeap()
     i = 0
     while i < len(A):
-        heap.insert(A[i], 0)
+        heap.insert(A[i], arr[i])
         i += 1
 
     end_time = time.time()
@@ -270,7 +271,7 @@ def operation_worst_list(A):
     print(" ")
 
     x = heap.find_path(heap.size)
-    y = x.value
+    y = x.priority
     print("Incremento:", y, "a", 102, "...")
     start_time = time.time()
 
